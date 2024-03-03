@@ -1,10 +1,12 @@
 package com.example.androidtechtest.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.androidtechtest.screens.main.MainScreen
+import com.example.androidtechtest.screens.main.MainViewModel
 import com.example.androidtechtest.screens.splash.SplashScreen
 
 
@@ -16,7 +18,8 @@ fun AppNavigation() {
             SplashScreen(navController = navController)
         }
         composable(AppScreens.MainScreen.name){
-            MainScreen(navController = navController)
+            val mainViewModel = hiltViewModel<MainViewModel>()
+            MainScreen(navController = navController, mainViewModel)
         }
     }
 }
