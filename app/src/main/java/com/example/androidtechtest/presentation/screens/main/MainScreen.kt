@@ -19,6 +19,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,20 +40,22 @@ import com.example.androidtechtest.core.utils.formatDate
 import com.example.androidtechtest.core.utils.formatDecimals
 import com.example.androidtechtest.presentation.components.ShowAppBar
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
-fun MainScreen(navController: NavController, mainViewModel: MainViewModel = hiltViewModel(),
+fun MainScreen(navController: NavController, mainViewModel: MainViewModel,
                city: String?) {
     val selectedCity: String = if (city!!.isBlank()) "Pune" else city
-    val weatherData = produceState<DataOrException<Weather, Boolean, Exception>>(
-        initialValue = DataOrException(loading = true)
-    ){
-            value = mainViewModel.getWeatherData(selectedCity)
-        }.value
-    if(weatherData.loading == true){
-        CircularProgressIndicator()
-    } else {
-        weatherData.data?.let { ShowUI(it, navController) }
-    }
+//    val _weatherDataStateHolder = mutableStateOf(DataOrException<Weather, Boolean, Exception>())
+//    val weatherDataStateHolder  = produceState<DataOrException<Weather, Boolean, Exception>>(
+//        initialValue = DataOrException(loading = true)
+//    ){
+//            value = mainViewModel.getWeatherData(selectedCity)
+//        }.value
+//    if(weatherData.loading == true){
+//        CircularProgressIndicator()
+//    } else {
+//        weatherData.data?.let { ShowUI(it, navController) }
+//    }
 }
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable

@@ -1,23 +1,17 @@
 package com.example.androidtechtest.repository
 
-import com.example.androidtechtest.data.model.City
-import com.example.androidtechtest.data.model.Coord
 import com.example.androidtechtest.data.model.Weather
-import com.example.androidtechtest.data.model.WeatherItem
-import com.example.androidtechtest.data.repository.AppRepository
+import com.example.androidtechtest.data.repository.AppRepositoryImpl
 import com.google.gson.Gson
-import kotlinx.coroutines.runBlocking
-import org.junit.Assert.*
 import org.junit.Before
 
-import org.junit.Test
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
 
-class AppRepositoryTest {
+class AppRepositoryImplTest {
 
     @Mock
-    private lateinit var appRepository: AppRepository
+    private lateinit var appRepositoryImpl: AppRepositoryImpl
 
     @Before
     fun setup(){
