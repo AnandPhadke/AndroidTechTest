@@ -3,15 +3,13 @@ package com.example.androidtechtest.presentation.screens.main
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.androidtechtest.core.common.Resource
-import com.example.androidtechtest.presentation.state.DataOrException
 import com.example.androidtechtest.data.model.Weather
-import com.example.androidtechtest.domain.repository.AppRepository
 import com.example.androidtechtest.domain.use_cases.GetWeatherUseCase
+import com.example.androidtechtest.presentation.state.DataOrException
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -26,23 +24,21 @@ class MainViewModel @Inject constructor(private val getWeatherUseCase: GetWeathe
     val weatherDataStateHolder : State<DataOrException<Weather, Boolean, Exception>> = _weatherDataStateHolder
 
     init {
-            viewModelScope.launch {
-                //savedStateHandle.getStateFlow()
-            }
+           getWeatherData("Pune")
     }
-    suspend fun getWeatherData(city: String) {
+    private fun getWeatherData(city: String) {
         viewModelScope.launch {
             getWeatherUseCase(city).onEach {
                 when(it){
                     is Resource.Loading ->{
-
+                        _weatherDataStateHolder.value = DataOrException(loading = true)
                     }
                     is Resource.Success -> {
-
+                        _weatherDataStateHolder.value = DataOrException(data = it.data)
                     }
 
                     is Resource.Error -> {
-
+                        _weatherDataStateHolder.value = DataOrException(error = it.message.toString())
                     }
 
                 }
@@ -51,7 +47,7 @@ class MainViewModel @Inject constructor(private val getWeatherUseCase: GetWeathe
     }
 
     val data : MutableState<DataOrException<Weather, Boolean, Exception>>
-    = mutableStateOf(DataOrException(null,true,Exception("")))
+    = mutableStateOf(DataOrException(null,true,"Error"))
 
 
 }

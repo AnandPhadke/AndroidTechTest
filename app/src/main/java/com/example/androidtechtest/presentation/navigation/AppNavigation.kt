@@ -21,6 +21,7 @@ fun AppNavigation() {
         composable(AppScreens.SplashScreen.name){
             SplashScreen(navController = navController)
         }
+
         val route = AppScreens.MainScreen.name
         composable("$route/{city}",
             arguments = listOf(
