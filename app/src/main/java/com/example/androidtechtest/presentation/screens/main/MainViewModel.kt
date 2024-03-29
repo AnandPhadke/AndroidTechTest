@@ -11,6 +11,9 @@ import com.example.androidtechtest.data.model.Weather
 import com.example.androidtechtest.domain.use_cases.GetWeatherUseCase
 import com.example.androidtechtest.presentation.state.DataOrException
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -23,31 +26,27 @@ class MainViewModel @Inject constructor(private val getWeatherUseCase: GetWeathe
     private val _weatherDataStateHolder = mutableStateOf(DataOrException<Weather, Boolean, Exception>())
     val weatherDataStateHolder : State<DataOrException<Weather, Boolean, Exception>> = _weatherDataStateHolder
 
-    init {
-           getWeatherData("Pune")
-    }
-    private fun getWeatherData(city: String) {
+
+    fun getWeather(city: String) {
         viewModelScope.launch {
-            getWeatherUseCase(city).onEach {
-                when(it){
-                    is Resource.Loading ->{
-                        _weatherDataStateHolder.value = DataOrException(loading = true)
-                    }
-                    is Resource.Success -> {
-                        _weatherDataStateHolder.value = DataOrException(data = it.data)
-                    }
+            if (city != null) {
+                getWeatherUseCase(city).onEach {
+                    when(it){
+                        is Resource.Loading ->{
+                            _weatherDataStateHolder.value = DataOrException(loading = true)
+                        }
 
-                    is Resource.Error -> {
-                        _weatherDataStateHolder.value = DataOrException(error = it.message.toString())
-                    }
+                        is Resource.Success -> {
+                            _weatherDataStateHolder.value = DataOrException(data = it.data)
+                        }
 
-                }
-            }.launchIn(viewModelScope)
+                        is Resource.Error -> {
+                            _weatherDataStateHolder.value = DataOrException(error = it.message.toString())
+                        }
+
+                    }
+                }.launchIn(viewModelScope)
+            }
         }
     }
-
-    val data : MutableState<DataOrException<Weather, Boolean, Exception>>
-    = mutableStateOf(DataOrException(null,true,"Error"))
-
-
 }

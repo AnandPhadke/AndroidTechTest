@@ -38,7 +38,8 @@ fun AppNavigation() {
 
         }
         composable(AppScreens.SearchScreen.name){
-            SearchScreen(navController = navController)
+            var mainViewModel = hiltViewModel<MainViewModel>()
+            SearchScreen(navController = navController,mainViewModel)
         }
 
         composable(AppScreens.FavoriteScreen.name){

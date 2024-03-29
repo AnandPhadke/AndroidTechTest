@@ -1,6 +1,7 @@
 package com.example.androidtechtest.presentation.screens.main
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -19,6 +20,11 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.androidtechtest.R
+import com.example.androidtechtest.core.common.Resource
 import com.example.androidtechtest.core.utils.Constants.BASE_URL_IMAGE
 import com.example.androidtechtest.core.utils.formatDate
 import com.example.androidtechtest.core.utils.formatDecimals
@@ -35,6 +42,13 @@ import com.example.androidtechtest.data.model.Weather
 import com.example.androidtechtest.data.model.WeatherItem
 import com.example.androidtechtest.presentation.components.ShowAppBar
 import com.example.androidtechtest.presentation.navigation.AppScreens
+import com.example.androidtechtest.presentation.state.DataOrException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -42,14 +56,22 @@ fun MainScreen(
     navController: NavController, mainViewModel: MainViewModel,
     city: String?
 ) {
-    val result = mainViewModel.weatherDataStateHolder.value
-    if (result.loading == true) {
-        CircularProgressIndicator()
-    } else {
-        result.data?.let { ShowUI(it, navController) }
-    }
+   LaunchedEffect(key1 = null, block = {
+       Log.d("TAG", "Main Screen  city  $city ")
+       val curCity: String = if (city!!.isBlank()) "Pune" else city
+       mainViewModel.getWeather(curCity)
 
+   })
+       val result = mainViewModel.weatherDataStateHolder.value
+           if (result.loading == true) {
+               CircularProgressIndicator()
+           } else {
+               result.data?.let { ShowUI(it, navController) }
+           }
 }
+
+
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
