@@ -21,34 +21,22 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.androidtechtest.R
-import com.example.androidtechtest.core.common.Resource
 import com.example.androidtechtest.core.utils.Constants.BASE_URL_IMAGE
-import com.example.androidtechtest.core.utils.formatDate
-import com.example.androidtechtest.core.utils.formatDecimals
+import com.example.androidtechtest.core.utils.Utils
 import com.example.androidtechtest.data.model.Weather
 import com.example.androidtechtest.data.model.WeatherItem
 import com.example.androidtechtest.presentation.components.ShowAppBar
 import com.example.androidtechtest.presentation.navigation.AppScreens
-import com.example.androidtechtest.presentation.state.DataOrException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -56,21 +44,19 @@ fun MainScreen(
     navController: NavController, mainViewModel: MainViewModel,
     city: String?
 ) {
-   LaunchedEffect(key1 = null, block = {
-       Log.d("TAG", "Main Screen  city  $city ")
-       val curCity: String = if (city!!.isBlank()) "Pune" else city
-       mainViewModel.getWeather(curCity)
+    LaunchedEffect(key1 = null, block = {
+        Log.d("TAG", "Main Screen  city  $city ")
+        val curCity: String = if (city!!.isBlank()) "Pune" else city
+        mainViewModel.getWeather(curCity)
 
-   })
-       val result = mainViewModel.weatherDataStateHolder.value
-           if (result.loading == true) {
-               CircularProgressIndicator()
-           } else {
-               result.data?.let { ShowUI(it, navController) }
-           }
+    })
+    val result = mainViewModel.weatherDataStateHolder.value
+    if (result.loading == true) {
+        CircularProgressIndicator(modifier = Modifier.testTag("progress"))
+    } else {
+        result.data?.let { ShowUI(it, navController) }
+    }
 }
-
-
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
@@ -106,7 +92,7 @@ fun MainContent(data: Weather) {
     ) {
         //TODO
         Text(
-            text = formatDate(data.list.get(0).dt), modifier = Modifier.padding(5.dp),
+            text = Utils.formatDate(data.list.get(0).dt), modifier = Modifier.padding(5.dp),
             color = MaterialTheme.colors.secondary
         )
 
@@ -118,7 +104,7 @@ fun MainContent(data: Weather) {
             ) {
                 WeatherStateImage(imageUrl)
                 Text(
-                    text = formatDecimals(weatherItem.temp.day) + "º",
+                    text = Utils.formatDecimals(weatherItem.temp.day) + "º",
                     style = MaterialTheme.typography.h4
                 )
                 Text(text = weatherItem.weather[0].main)
@@ -130,8 +116,9 @@ fun MainContent(data: Weather) {
         Text(text = "This week", style = MaterialTheme.typography.subtitle1)
         Surface() {
             LazyColumn(
-                modifier = Modifier.padding(2.dp),
+                modifier = Modifier.testTag("weather_list").padding(2.dp),
                 contentPadding = PaddingValues(1.dp)
+
             ) {
                 items(items = data.list) { item: WeatherItem ->
                     WeatherDetailRow(weather = item)
@@ -157,7 +144,7 @@ fun WeatherDetailRow(weather: WeatherItem) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                formatDate(weather.dt),
+                Utils.formatDate(weather.dt),
                 modifier = Modifier.padding(start = 5.dp)
             )
             WeatherStateImage(imageUrl = imageUrl)
@@ -173,7 +160,7 @@ fun WeatherDetailRow(weather: WeatherItem) {
 
             }
             Text(
-                text = formatDecimals(weather.temp.max) + "º",
+                text = Utils.formatDecimals(weather.temp.max) + "º",
                 color = Color.Blue.copy(alpha = 0.7f),
                 fontWeight = FontWeight.Bold
             )
