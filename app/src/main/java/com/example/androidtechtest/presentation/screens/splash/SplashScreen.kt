@@ -25,9 +25,10 @@ import kotlinx.coroutines.delay
 @Composable
 fun SplashScreen(navController: NavController) {
 
+    val defaultCity = "Pune"
     LaunchedEffect(key1 = null, block = {
         delay(2000)
-        navController.navigate(AppScreens.MainScreen.name + "/Pune")
+        navController.navigate(AppScreens.MainScreen.name + "/$defaultCity")
     })
     launch()
 

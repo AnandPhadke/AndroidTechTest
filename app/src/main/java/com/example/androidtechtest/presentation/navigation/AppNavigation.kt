@@ -21,6 +21,7 @@ fun AppNavigation() {
         composable(AppScreens.SplashScreen.name){
             SplashScreen(navController = navController)
         }
+
         val route = AppScreens.MainScreen.name
         composable("$route/{city}",
             arguments = listOf(
@@ -37,7 +38,8 @@ fun AppNavigation() {
 
         }
         composable(AppScreens.SearchScreen.name){
-            SearchScreen(navController = navController)
+            var mainViewModel = hiltViewModel<MainViewModel>()
+            SearchScreen(navController = navController,mainViewModel)
         }
 
         composable(AppScreens.FavoriteScreen.name){

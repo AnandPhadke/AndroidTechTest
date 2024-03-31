@@ -2,10 +2,10 @@ package com.example.androidtechtest.di
 
 import android.content.Context
 import androidx.room.Room
+import com.example.androidtechtest.core.utils.Constants
 import com.example.androidtechtest.data.database.AppDao
 import com.example.androidtechtest.data.database.AppDatabase
 import com.example.androidtechtest.data.network.AppApi
-import com.example.androidtechtest.core.utils.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

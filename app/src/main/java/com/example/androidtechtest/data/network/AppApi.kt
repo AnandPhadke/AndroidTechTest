@@ -1,7 +1,7 @@
 package com.example.androidtechtest.data.network
 
-import com.example.androidtechtest.data.model.Weather
 import com.example.androidtechtest.core.utils.Constants.API_KEY
+import com.example.androidtechtest.data.model.Weather
 import retrofit2.http.GET
 import retrofit2.http.Query
 import javax.inject.Singleton

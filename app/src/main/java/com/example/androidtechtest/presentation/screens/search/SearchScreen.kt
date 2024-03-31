@@ -28,12 +28,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.androidtechtest.presentation.navigation.AppScreens
+import com.example.androidtechtest.presentation.screens.main.MainViewModel
 
 
 @OptIn(ExperimentalComposeUiApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun SearchScreen(navController: NavController) {
+fun SearchScreen(navController: NavController, mainViewModel: MainViewModel) {
     Scaffold(topBar = { showSearchAppBar(title = "Search", navController = navController)
     }) {
 
@@ -46,7 +47,7 @@ fun SearchScreen(navController: NavController) {
                     .align(Alignment.CenterHorizontally)){
                         citySearch ->
                     let {
-                        Log.d("Search", " search  text  $citySearch")
+                        Log.d("SearchScreen", " search  text  $citySearch")
                         navController.navigate(AppScreens.MainScreen.name + "/$citySearch")
                     }
                 }
@@ -67,7 +68,7 @@ fun SearchBar(
     Column {
         CommonTextField(
             valueState = searchQueryState,
-            placeholder = "pune",
+            placeholder = "Type City",
             onAction = KeyboardActions {
                 onSearch(searchQueryState.value.trim())
                 searchQueryState.value = ""
